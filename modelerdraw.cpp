@@ -417,7 +417,71 @@ void drawTriangle( double x1, double y1, double z1,
 }
 
 
+// ADDED!
+void drawTriangularPrism(int x, int y, int z) {
+    // draw a triangular prism with the bottom vertices being
+    // the origin, (x1, y1, 0) and (x2, y2, 0), the height is h
 
+    ModelerDrawState *mds = ModelerDrawState::Instance();
+
+    _setupOpenGl();
+
+    if (mds->m_rayFile) {
+        // TODO: EDIT THIS
+        //_dump_current_modelview();
+        //fprintf(mds->m_rayFile,
+        //    "scale(%f,%f,%f,translate(0.5,0.5,0.5,box {\n", x, y, z);
+        //_dump_current_material();
+        //fprintf(mds->m_rayFile, "})))\n");
+    }
+    else {
+        /* remember which matrix mode OpenGL was in. */
+        int savemode;
+        glGetIntegerv(GL_MATRIX_MODE, &savemode);
+        
+        glEnable(GL_NORMALIZE);
+
+        /* switch to the model matrix and scale by x,y,z. */
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glScaled(x, y, z);
+
+        glBegin(GL_QUADS);
+
+        glNormal3d(0.0, -1.0, 0.0);
+        glVertex3d(0.0, 0.0, 0.0); glVertex3d(1.0, 0.0, 0.0);
+        glVertex3d(1.0, 0.0, 1.0); glVertex3d(0.0, 0.0, 1.0);
+
+        glNormal3d(-1.0, 0.0, 0.0);
+        glVertex3d(0.0, 0.0, 0.0); glVertex3d(0.0, 0.0, 1.0);
+        glVertex3d(0.0, 1.0, 1.0); glVertex3d(0.0, 1.0, 0.0);
+
+        // TODO: ensure GL_NORMALIZE is enabled
+        glNormal3d(1.0, 1.0, 0.0);
+        glVertex3d(1.0, 0.0, 1.0); glVertex3d(0.0, 1.0, 1.0);
+        glVertex3d(0.0, 1.0, 0.0); glVertex3d(1.0, 0.0, 0.0);
+
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+
+        glNormal3d(0.0, 0.0, -1.0);
+        glVertex3d(0.0, 0.0, 0.0); glVertex3d(0.0, 1.0, 0.0);
+        glVertex3d(1.0, 0.0, 0.0);
+
+        glNormal3d(0.0, 0.0, 1.0);
+        glVertex3d(0.0, 0.0, 1.0); glVertex3d(1.0, 0.0, 1.0);
+        glVertex3d(0.0, 1.0, 1.0);
+
+        glEnd();
+
+        /* restore the model matrix stack, and switch back to the matrix
+        mode we were in. */
+        glPopMatrix();
+        glMatrixMode(savemode);
+    }
+
+}
 
 
 
