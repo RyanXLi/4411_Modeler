@@ -183,4 +183,25 @@ void Camera::applyViewingTransform() {
 				mUpVector[0], mUpVector[1], mUpVector[2]);
 }
 
+void Camera::lookAt(Vec3f eye, Vec3f at, Vec3f up)
+{
+	Vec3f view_direction(at - eye);
+	view_direction.normalize();
+	up.normalize();
+	Vec3f right_direction = view_direction ^ up;
+	right_direction.normalize();
+	up = right_direction ^ view_direction;
+	//up.normalize();
+	Mat4f view_matrix = {
+		right_direction[0], right_direction[1], right_direction[2], 0,
+		up[0],				up[1],				up[2],				0,
+		-view_direction[0], -view_direction[1], -view_direction[2], 0,
+		0,					0,					0,					1
+	};
+	float glViewMatrix[16];
+	view_matrix.getGLMatrix(glViewMatrix);
+	glMultMatrixf(glViewMatrix);
+	glTranslated(-eye[0], -eye[1], -eye[2]);
+}
+
 #pragma warning(pop)
