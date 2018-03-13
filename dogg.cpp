@@ -1,11 +1,14 @@
 #include "modelerview.h"
 #include "modelerapp.h"
 #include "modelerdraw.h"
+#include "camera.h"
 #include <FL/gl.h>
+#include <gl/glu.h>
 #include <math.h>
 
 #include "modelerglobals.h"
 
+class camera;
 // To make a DoggModel, we inherit off of ModelerView
 class DoggModel : public ModelerView 
 {
@@ -16,6 +19,7 @@ public:
     virtual void draw();
     void drawAxis();
     void resetLeg();
+	void frameAll(float dx, float dy, float dz);
 };
 
 // We need to make a creator function, mostly because of
@@ -32,13 +36,16 @@ void DoggModel::draw()
     // This call takes care of a lot of the nasty projection 
     // matrix stuff.  Unless you want to fudge directly with the 
 	// projection matrix, don't bother with this ...
-    ModelerView::draw();
 
+	if (VAL(FRAME_ALL)) { 
+		DoggModel::frameAll(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
+	}
+	
+	ModelerView::draw();
 
     //DoggModel::drawAxis();
 
     if (VAL(RESET_LEG)) { DoggModel::resetLeg(); }
-
 
 
 	// draw the dogg model
@@ -379,6 +386,13 @@ void DoggModel::resetLeg() {
     SET(RESET_LEG, 0);
 }
 
+void DoggModel::frameAll(float dx, float dy, float dz)
+{
+	m_camera->frameAll(dx,dy,dz);
+	//gluLookAt(3.119846,3.837214,24.113871,2.040295,0.852658,-0.159513,0,1,0);
+	SET(FRAME_ALL, 0);
+}
+
 
 int main()
 {
@@ -408,6 +422,7 @@ int main()
     controls[TAIL_ANGLE_Y] = ModelerControl("Tail Angle Y", -45, 45, 0.1f, 0);
     controls[TAIL_ANGLE_Z] = ModelerControl("Tail Angle Z", -15, 135, 0.1f, 0);
     controls[RESET_LEG] = ModelerControl("Reset Leg Pose", 0, 1, 1, 0);
+	controls[FRAME_ALL] = ModelerControl("Frame All", 0, 1, 1, 0);
 
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);

@@ -91,7 +91,10 @@ void Camera::calculateViewingTransformParameters()
 	mPosition = Vec3f(0,0,0);
 	// grouped for (mat4 * vec3) ops instead of (mat4 * mat4) ops
 	mPosition = originXform * (azimXform * (elevXform * (dollyXform * mPosition)));
-
+	printf("mpostion:%f %f %f\n", mPosition[0], mPosition[1], mPosition[2]);
+	printf("mlookat:%f %f %f\n", mLookAt[0], mLookAt[1], mLookAt[2]);
+	printf("mup:%f %f %f\n", mUpVector[0], mUpVector[1], mUpVector[2]);
+	printf("%f %f %f %f\n\n", mAzimuth, mElevation, mDolly, mTwist);
 	if ( fmod((double)mElevation, 2.0*M_PI) < 3*M_PI/2 && fmod((double)mElevation, 2.0*M_PI) > M_PI/2 )
 		mUpVector= Vec3f(sin(mTwist),-cos(mTwist),0);
 	else
