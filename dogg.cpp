@@ -389,6 +389,7 @@ int main()
     controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
     controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
     controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
+
     controls[NECK_ANGLE] = ModelerControl("Neck Angle", -45, 45, 0.1f, 1);
 	controls[HEAD_ANGLE_X] = ModelerControl("Head Angle in X direction", -45, 45, 0.1f, 0);
     controls[HEAD_ANGLE_Z] = ModelerControl("Head Angle in Z direction", 0, 45, 0.1f, 0);
@@ -407,7 +408,16 @@ int main()
     controls[TAIL_ANGLE_X] = ModelerControl("Tail Angle X", -45, 45, 0.1f, 0);
     controls[TAIL_ANGLE_Y] = ModelerControl("Tail Angle Y", -45, 45, 0.1f, 0);
     controls[TAIL_ANGLE_Z] = ModelerControl("Tail Angle Z", -15, 135, 0.1f, 0);
+
     controls[RESET_LEG] = ModelerControl("Reset Leg Pose", 0, 1, 1, 0);
+
+    controls[LIGHT0_X] = ModelerControl("Light 0 X position", -5, 5, 0.1f, 4);
+    controls[LIGHT0_Y] = ModelerControl("Light 0 Y position", -5, 5, 0.1f, 2);
+    controls[LIGHT0_Z] = ModelerControl("Light 0 Z position", -5, 5, 0.1f, -4);
+                                                              
+    controls[LIGHT0_R] = ModelerControl("Light 0 red color", 0, 1, 0.01f, 1);
+    controls[LIGHT0_G] = ModelerControl("Light 0 green color", 0, 1, 0.01f, 1);
+    controls[LIGHT0_B] = ModelerControl("Light 0 blue color", 0, 1, 0.01f, 1);
 
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
