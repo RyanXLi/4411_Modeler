@@ -69,8 +69,44 @@ void DoggModel::draw()
         drawBox(1, 1, 1);
         glPopMatrix();
 
-        // propeller
+        
+        if (VAL(DRAW_PROP)) {
+            // propeller
+            // left
+            glPushMatrix();
+            glTranslated(1, 2.5, 0.9);
+            glRotated(60, 1, 0, 0);
 
+            glPushMatrix();
+            glScaled(0.3, 1.2, 0.3);
+            drawBox(1, 1, 1);
+            glPopMatrix();
+
+            glTranslated(-1.5, 0.8 - 0.2 + 0.8, 0);
+            glPushMatrix();
+            glRotated(90, 0, 1, 0);
+            drawCylinder(3, 0.8, 0.8);
+            glPopMatrix();
+            glPopMatrix();
+
+            // right
+            glPushMatrix();
+            glTranslated(1 , 2.5 - 0.15, -0.9); // - (0.3 / 2) since rotation direction
+            glRotated(-60, 1, 0, 0);
+
+            glPushMatrix();
+            glScaled(0.3, 1.2, 0.3);
+            drawBox(1, 1, 1);
+            glPopMatrix();
+
+            glTranslated(-1.5, 0.8 - 0.2 + 0.8, +0.15);
+            glPushMatrix();
+            glRotated(90, 0, 1, 0);
+            drawCylinder(3, 0.8, 0.8);
+            glPopMatrix();
+            glPopMatrix();
+            
+        }
 
 
         // part 3: neck
@@ -418,6 +454,8 @@ int main()
     controls[LIGHT0_R] = ModelerControl("Light 0 red color", 0, 1, 0.01f, 1);
     controls[LIGHT0_G] = ModelerControl("Light 0 green color", 0, 1, 0.01f, 1);
     controls[LIGHT0_B] = ModelerControl("Light 0 blue color", 0, 1, 0.01f, 1);
+
+    controls[DRAW_PROP] = ModelerControl("Draw propeller?", 0, 1, 1, 1);
 
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
