@@ -49,311 +49,314 @@ void DoggModel::draw()
 
         // part 1: torso
 		glPushMatrix();
-		glTranslated(-2, 0, -1);
-        glScaled(2, 3, 2);
-		drawBox(1,1,1);
+		    glTranslated(-2, 0, -1);
+            glScaled(2, 3, 2);
+		    drawBox(1,1,1);
 		glPopMatrix();
 
 
         // part 2: torso
         glPushMatrix();
-        glTranslated(0, 1.5, -1);
-        glRotated(-90, 0.0, 0.0, 1.0);
-        glScaled(1.5, 4.5, 2);
-        drawTriangularPrism(1,1,1);
+            glTranslated(0, 1.5, -1);
+            glRotated(-90, 0.0, 0.0, 1.0);
+            glScaled(1.5, 4.5, 2);
+            drawTriangularPrism(1,1,1);
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(0, 1.5, -1);
-        glScaled(4.5, 1.5, 2);
-        drawBox(1, 1, 1);
+            glTranslated(0, 1.5, -1);
+            glScaled(4.5, 1.5, 2);
+            drawBox(1, 1, 1);
         glPopMatrix();
 
-        
-        if (VAL(DRAW_PROP)) {
-            // propeller
+        if (VAL(LV_DETAIL) > 1) {
+
+            if (VAL(DRAW_PROP)) {
+                // propeller
+                // left
+                glPushMatrix();
+                glTranslated(1, 2.5, 0.9);
+                glRotated(60, 1, 0, 0);
+
+                glPushMatrix();
+                glScaled(0.3, 1.2, 0.3);
+                drawBox(1, 1, 1);
+                glPopMatrix();
+
+                glTranslated(-1.5, 0.8 - 0.2 + 0.8, 0);
+                glPushMatrix();
+                glRotated(90, 0, 1, 0);
+                drawCylinder(3, 0.8, 0.8);
+                glPopMatrix();
+                glPopMatrix();
+
+                // right
+                glPushMatrix();
+                glTranslated(1, 2.5 - 0.15, -0.9); // - (0.3 / 2) since rotation direction
+                glRotated(-60, 1, 0, 0);
+
+                glPushMatrix();
+                glScaled(0.3, 1.2, 0.3);
+                drawBox(1, 1, 1);
+                glPopMatrix();
+
+                glTranslated(-1.5, 0.8 - 0.2 + 0.8, +0.15);
+                glPushMatrix();
+                glRotated(90, 0, 1, 0);
+                drawCylinder(3, 0.8, 0.8);
+                glPopMatrix();
+                glPopMatrix();
+
+            }
+
+
+            // part 3: neck
+
+            double angle0 = 45 + VAL(NECK_ANGLE);
+
+            glPushMatrix();
+
+            glTranslated(-1, 1.3, -1);
+            glRotated(angle0, 0.0, 0.0, 1.0);
+
+            glPushMatrix();
+            glScaled(1.5, 2.2, 2);
+            drawBox(1, 1, 1);
+            glPopMatrix();
+
+            // head
+            if (VAL(LV_DETAIL) > 2) {
+
+                glTranslated(1.5, 2, 0);
+                glRotated(90, 0, 0, 1);
+
+                // rotate
+                glTranslated(0, 0, 1);
+                glRotated(VAL(HEAD_ANGLE_X), 1, 0, 0);
+                glTranslated(0, 0, -1);
+                glRotated(VAL(HEAD_ANGLE_Z), 0, 0, 1);
+
+                glPushMatrix();
+                glScaled(0.75, 3, 2);
+                drawBox(1, 1, 1);
+                glPopMatrix();
+
+                glTranslated(0.75, 0, 0);
+
+                glPushMatrix();
+                glScaled(0.75, 2, 2);
+                drawBox(1, 1, 1);
+                glPopMatrix();
+            }
+
+            glPopMatrix();
+
+
+            // part4, 8, 11 front right leg
+            double frontLegSize = 0.6;
+            double frontLegX = -2 + frontLegSize;
+            double frontLegY = 0;
+            double frontLegZ = -1;
+
+            glPushMatrix();
+                glTranslated(frontLegX, frontLegY + 0.5, frontLegZ);
+
+                // rotate
+                glRotated(VAL(RIGHT_FRONT_ANGLE1), 0, 0, 1);
+
+                glPushMatrix();
+                    glRotated(-180, 0, 0, 1);
+                    glScaled(frontLegSize, 2 + 0.5, frontLegSize);
+                    drawBox(1, 1, 1);
+                glPopMatrix();
+
+                if (VAL(LV_DETAIL) > 2) {
+
+                    glTranslated(0, -2 - 0.5 + 0.2, 0);
+                    glRotated(VAL(RIGHT_FRONT_ANGLE2), 0, 0, 1);
+
+                    glPushMatrix();
+                    glRotated(-180, 0, 0, 1);
+                    glScaled(frontLegSize, 1.5, frontLegSize);
+                    drawBox(1, 1, 1);
+                    glPopMatrix();
+
+                    if (VAL(LV_DETAIL) > 3) {
+
+                        glTranslated(0, -1.5 + 0.2, 0);
+                        glRotated(VAL(RIGHT_FRONT_ANGLE3), 0, 0, 1);
+
+                        glPushMatrix();
+                        glRotated(-180, 0, 0, 1);
+                        glScaled(1, 0.3, frontLegSize);
+                        drawBox(1, 1, 1);
+                        glPopMatrix();
+                    }
+                }
+            glPopMatrix();
+
+
+
+
+
+
+            // front left leg
+            frontLegZ = 1 - frontLegSize;
+
+            // copied from above
+            glPushMatrix();
+                glTranslated(frontLegX, frontLegY + 0.5, frontLegZ);
+
+                // rotate
+                glRotated(VAL(LEFT_FRONT_ANGLE1), 0, 0, 1);
+
+                glPushMatrix();
+                    glRotated(-180, 0, 0, 1);
+                    glScaled(frontLegSize, 2 + 0.5, frontLegSize);
+                    drawBox(1, 1, 1);
+                glPopMatrix();
+
+                glTranslated(0, -2 - 0.5 + 0.2, 0);
+                glRotated(VAL(LEFT_FRONT_ANGLE2), 0, 0, 1);
+
+                if (VAL(LV_DETAIL) > 2) {
+                    glPushMatrix();
+                        glRotated(-180, 0, 0, 1);
+                        glScaled(frontLegSize, 1.5, frontLegSize);
+                        drawBox(1, 1, 1);
+                    glPopMatrix();
+
+
+                    glTranslated(0, -1.5 + 0.2, 0);
+                    glRotated(VAL(LEFT_FRONT_ANGLE3), 0, 0, 1);
+
+                    if (VAL(LV_DETAIL) > 3) {
+                        glPushMatrix();
+                            glRotated(-180, 0, 0, 1);
+                            glScaled(1, 0.3, frontLegSize);
+                            drawBox(1, 1, 1);
+                        glPopMatrix();
+                    }
+                }
+            glPopMatrix();
+
+
+
+
+
+
+            // part5, 9, 12 back right leg
+
+            double backLegSize = 0.6;
+            double backLegX = 4.5;
+            double backLegY = 1.7;
+            double backLegZ = -1;
+
+            double aux = 0.1;
+
+            glPushMatrix();
+            glTranslated(backLegX, backLegY + aux, backLegZ);
+            // rotate
+            glRotated(VAL(RIGHT_BACK_ANGLE1), 0, 0, 1);
+
+            glPushMatrix();
+            glRotated(-180, 0, 0, 1);
+            glScaled(backLegSize, 2.5 + aux, backLegSize);
+            drawBox(1, 1, 1);
+            glPopMatrix();
+
+
+            glTranslated(0, -2.5 + aux, 0);
+            // rotate
+            glRotated(VAL(RIGHT_BACK_ANGLE2), 0, 0, 1);
+
+            if (VAL(LV_DETAIL) > 2) {
+
+                glRotated(-30, 0, 0, 1);
+                glPushMatrix();
+                glRotated(-180, 0, 0, 1);
+                glScaled(backLegSize, 3, backLegSize);
+                drawBox(1, 1, 1);
+                glPopMatrix();
+
+                glTranslated(0, -3 + 3 * aux, 0);
+
+                // rotate
+                glRotated(VAL(RIGHT_BACK_ANGLE3), 0, 0, 1);
+                glRotated(30, 0, 0, 1);
+
+                if (VAL(LV_DETAIL) > 3) {
+
+                    glPushMatrix();
+                    glRotated(-180, 0, 0, 1);
+                    glScaled(1, 0.3, backLegSize);
+                    drawBox(1, 1, 1);
+                    glPopMatrix();
+                }
+            }
+            glPopMatrix();
+
+
+
+
+
             // left
-            glPushMatrix();
-            glTranslated(1, 2.5, 0.9);
-            glRotated(60, 1, 0, 0);
+            backLegZ = 1 - backLegSize;
 
             glPushMatrix();
-            glScaled(0.3, 1.2, 0.3);
+            glTranslated(backLegX, backLegY + aux, backLegZ);
+            // rotate
+            glRotated(VAL(LEFT_BACK_ANGLE1), 0, 0, 1);
+
+            glPushMatrix();
+            glRotated(-180, 0, 0, 1);
+            glScaled(backLegSize, 2.5 + aux, backLegSize);
             drawBox(1, 1, 1);
             glPopMatrix();
 
-            glTranslated(-1.5, 0.8 - 0.2 + 0.8, 0);
-            glPushMatrix();
-            glRotated(90, 0, 1, 0);
-            drawCylinder(3, 0.8, 0.8);
-            glPopMatrix();
+
+            glTranslated(0, -2.5 + aux, 0);
+            // rotate
+            glRotated(VAL(LEFT_BACK_ANGLE2), 0, 0, 1);
+
+            if (VAL(LV_DETAIL) > 2) {
+                glRotated(-30, 0, 0, 1);
+                glPushMatrix();
+                glRotated(-180, 0, 0, 1);
+                glScaled(backLegSize, 3, backLegSize);
+                drawBox(1, 1, 1);
+                glPopMatrix();
+
+                glTranslated(0, -3 + 3 * aux, 0);
+
+                // rotate
+                glRotated(VAL(LEFT_BACK_ANGLE3), 0, 0, 1);
+                glRotated(30, 0, 0, 1);
+
+                if (VAL(LV_DETAIL) > 3) {
+                    glPushMatrix();
+                    glRotated(-180, 0, 0, 1);
+                    glScaled(1, 0.3, backLegSize);
+                    drawBox(1, 1, 1);
+                    glPopMatrix();
+                }
+            }
             glPopMatrix();
 
-            // right
-            glPushMatrix();
-            glTranslated(1 , 2.5 - 0.15, -0.9); // - (0.3 / 2) since rotation direction
-            glRotated(-60, 1, 0, 0);
 
+
+            // tail 
             glPushMatrix();
-            glScaled(0.3, 1.2, 0.3);
-            drawBox(1, 1, 1);
+                glTranslated(4.5, 2, -0.1);
+                glRotated(VAL(TAIL_ANGLE_X), 1, 0, 0);
+                glRotated(VAL(TAIL_ANGLE_Y), 0, 1, 0);
+                glRotated(-150 + VAL(TAIL_ANGLE_Z), 0, 0, 1);
+                glScaled(0.2, 2.5, 0.2);
+                drawBox(1, 1, 1);
             glPopMatrix();
 
-            glTranslated(-1.5, 0.8 - 0.2 + 0.8, +0.15);
-            glPushMatrix();
-            glRotated(90, 0, 1, 0);
-            drawCylinder(3, 0.8, 0.8);
-            glPopMatrix();
-            glPopMatrix();
-            
         }
-
-
-        // part 3: neck
-
-        double angle0 = 45 + VAL(NECK_ANGLE);
-
-        glPushMatrix();
-
-        glTranslated(-1, 1.3, -1);
-        glRotated(angle0, 0.0, 0.0, 1.0);
-
-        glPushMatrix();
-        glScaled(1.5, 2.2, 2); 
-        drawBox(1, 1, 1);
         glPopMatrix();
-
-        // head
-        
-        glTranslated(1.5, 2, 0);
-        glRotated(90, 0, 0, 1);
-
-        // rotate
-        glTranslated(0, 0, 1);
-        glRotated(VAL(HEAD_ANGLE_X), 1, 0, 0);
-        glTranslated(0, 0, -1);
-        glRotated(VAL(HEAD_ANGLE_Z), 0, 0, 1);
-
-        glPushMatrix();
-        glScaled(0.75, 3, 2);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-        glTranslated(0.75, 0, 0);
-
-        glPushMatrix();
-        glScaled(0.75, 2, 2);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-        glPopMatrix();
-
-
-        //glPushMatrix();
-        //drawTriangle(
-        //    -2, 2.3, -1, 
-        //    -3.06, 3.36, -1, 
-        //    -2, 0, -1
-        //);
-        //
-        //drawTriangle(
-        //    -2, 0, -1,
-        //    -3.06, 3.36, -1,
-        //    -2, 0, 1);
-        //drawTriangle(
-        //    -3.06, 3.36, -1,
-        //    -3.06, 3.36, 1,
-        //    -2, 0, 1);
-        //
-        //drawTriangle(
-        //    -2, 2.3, 1,
-        //    -3.06, 3.36, 1,
-        //    -2, 0, 1
-        //);
-        //glPopMatrix();
-
-
-
-
-        // part4, 8, 11 front right leg
-        double frontLegSize = 0.6;
-        double frontLegX = -2 + frontLegSize;
-        double frontLegY = 0;
-        double frontLegZ = -1;
-
-        glPushMatrix();
-        glTranslated(frontLegX, frontLegY + 0.5, frontLegZ);
-
-        // rotate
-        glRotated(VAL(RIGHT_FRONT_ANGLE1), 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(frontLegSize, 2 + 0.5, frontLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-        glTranslated(0, -2 - 0.5 + 0.2, 0);
-        glRotated(VAL(RIGHT_FRONT_ANGLE2), 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(frontLegSize, 1.5, frontLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-        glTranslated(0, -1.5 + 0.2, 0);
-        glRotated(VAL(RIGHT_FRONT_ANGLE3), 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(1, 0.3, frontLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-        glPopMatrix();
-
-
-
-
-
-        // front left leg
-        frontLegZ = 1 - frontLegSize;
-
-        // copied from above
-        glPushMatrix();
-        glTranslated(frontLegX, frontLegY + 0.5, frontLegZ);
-
-        // rotate
-        glRotated(VAL(LEFT_FRONT_ANGLE1), 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(frontLegSize, 2 + 0.5, frontLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-        
-        glTranslated(0, - 2 - 0.5 + 0.2, 0);
-        glRotated(VAL(LEFT_FRONT_ANGLE2), 0, 0, 1);
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(frontLegSize, 1.5, frontLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-        
-        glTranslated(0, -1.5 + 0.2, 0);
-        glRotated(VAL(LEFT_FRONT_ANGLE3), 0, 0, 1);
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(1, 0.3, frontLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-        glPopMatrix();
-
-
-
-
-
-
-        // part5, 9, 12 back right leg
-        double backLegSize = 0.6;
-        double backLegX = 4.5;
-        double backLegY = 1.7;
-        double backLegZ = -1;
-
-        double aux = 0.1;
-
-        glPushMatrix();
-        glTranslated(backLegX, backLegY + aux, backLegZ);
-        // rotate
-        glRotated(VAL(RIGHT_BACK_ANGLE1), 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(backLegSize, 2.5 + aux, backLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-
-        glTranslated(0, -2.5 + aux, 0);
-        // rotate
-        glRotated(VAL(RIGHT_BACK_ANGLE2), 0, 0, 1);
-
-        glRotated(-30, 0, 0, 1);
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(backLegSize, 3, backLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-        glTranslated(0, -3 + 3 * aux, 0);
-
-        // rotate
-        glRotated(VAL(RIGHT_BACK_ANGLE3), 0, 0, 1);
-        glRotated(30, 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(1, 0.3, backLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-        glPopMatrix();
-
-
-
-
-
-        // left
-        backLegZ = 1 - backLegSize;
-
-        glPushMatrix();
-        glTranslated(backLegX, backLegY + aux, backLegZ);
-        // rotate
-        glRotated(VAL(LEFT_BACK_ANGLE1), 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(backLegSize, 2.5 + aux, backLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-
-        glTranslated(0, -2.5 + aux, 0);
-        // rotate
-        glRotated(VAL(LEFT_BACK_ANGLE2), 0, 0, 1);
-
-        glRotated(-30, 0, 0, 1);
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(backLegSize, 3, backLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-
-        glTranslated(0, -3 + 3 * aux, 0);
-
-        // rotate
-        glRotated(VAL(LEFT_BACK_ANGLE3), 0, 0, 1);
-        glRotated(30, 0, 0, 1);
-
-        glPushMatrix();
-        glRotated(-180, 0, 0, 1);
-        glScaled(1, 0.3, backLegSize);
-        drawBox(1, 1, 1);
-        glPopMatrix();
-        glPopMatrix();
-
-
-        // tail 
-        glPushMatrix();
-        glTranslated(4.5, 2, -0.1);
-        glRotated(VAL(TAIL_ANGLE_X), 1, 0, 0);
-        glRotated(VAL(TAIL_ANGLE_Y), 0, 1, 0);
-        glRotated(-150 + VAL(TAIL_ANGLE_Z), 0, 0, 1);
-        glScaled(0.2, 2.5, 0.2);
-        drawBox(1, 1, 1);
-
-        glPopMatrix();
-
-	glPopMatrix();
 }
 
 
@@ -435,12 +438,12 @@ int main()
     controls[RIGHT_FRONT_ANGLE1] = ModelerControl("Right front upper  arm angle", -45, 45, 0.1f, 0);
     controls[RIGHT_FRONT_ANGLE2] = ModelerControl("Right front middle arm angle", -45, 45, 0.1f, 0);
     controls[RIGHT_FRONT_ANGLE3] = ModelerControl("Right front lower  arm angle", -45, 45, 0.1f, 0);
-    controls[LEFT_BACK_ANGLE1] = ModelerControl("Left back upper  arm angle", -45, 45, 0.1f, 0);
-    controls[LEFT_BACK_ANGLE2] = ModelerControl("Left back middle arm angle", -45, 45, 0.1f, 0);
-    controls[LEFT_BACK_ANGLE3] = ModelerControl("Left back lower  arm angle", -45, 45, 0.1f, 0);
-    controls[RIGHT_BACK_ANGLE1] = ModelerControl("Right back upper  arm angle", -45, 45, 0.1f, 0);
-    controls[RIGHT_BACK_ANGLE2] = ModelerControl("Right back middle arm angle", -45, 45, 0.1f, 0);
-    controls[RIGHT_BACK_ANGLE3] = ModelerControl("Right back lower  arm angle", -45, 45, 0.1f, 0);
+    controls[LEFT_BACK_ANGLE1] = ModelerControl("Left back upper  leg angle", -45, 45, 0.1f, 0);
+    controls[LEFT_BACK_ANGLE2] = ModelerControl("Left back middle leg angle", -45, 45, 0.1f, 0);
+    controls[LEFT_BACK_ANGLE3] = ModelerControl("Left back lower  leg angle", -45, 45, 0.1f, 0);
+    controls[RIGHT_BACK_ANGLE1] = ModelerControl("Right back upper  leg angle", -45, 45, 0.1f, 0);
+    controls[RIGHT_BACK_ANGLE2] = ModelerControl("Right back middle leg angle", -45, 45, 0.1f, 0);
+    controls[RIGHT_BACK_ANGLE3] = ModelerControl("Right back lower  leg angle", -45, 45, 0.1f, 0);
     controls[TAIL_ANGLE_X] = ModelerControl("Tail Angle X", -45, 45, 0.1f, 0);
     controls[TAIL_ANGLE_Y] = ModelerControl("Tail Angle Y", -45, 45, 0.1f, 0);
     controls[TAIL_ANGLE_Z] = ModelerControl("Tail Angle Z", -15, 135, 0.1f, 0);
@@ -457,6 +460,7 @@ int main()
 
     controls[DRAW_PROP] = ModelerControl("Draw propeller?", 0, 1, 1, 1);
 
+    controls[LV_DETAIL] = ModelerControl("Level of Detail", 1, 4, 1, 1);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
     return ModelerApplication::Instance()->Run();

@@ -21,6 +21,7 @@ enum SampleModelControls
     LIGHT0_X, LIGHT0_Y, LIGHT0_Z,
     LIGHT0_R, LIGHT0_G, LIGHT0_B,
     DRAW_PROP,
+    LV_DETAIL,
     NUMCONTROLS
 };
 
