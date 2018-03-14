@@ -4,6 +4,11 @@
 #include <cstdio>
 #include <math.h>
 
+// ADDED
+#include "modelerapp.h"
+#include "modelerglobals.h"
+// END
+
 // ********************************************************
 // Support functions from previous version of modeler
 // ********************************************************
@@ -311,7 +316,9 @@ void drawTextureBox( double x, double y, double z )
         int savemode;
         glGetIntegerv(GL_MATRIX_MODE, &savemode);
 
-        glEnable(GL_TEXTURE_2D);
+        if (VAL(APPLY_TEX)) {
+            glEnable(GL_TEXTURE_2D);
+        }
 
         /* switch to the model matrix and scale by x,y,z. */
         glMatrixMode(GL_MODELVIEW);
@@ -346,7 +353,9 @@ void drawTextureBox( double x, double y, double z )
 
         glEnd();
 
-        glDisable(GL_TEXTURE_2D);
+        if (VAL(APPLY_TEX)) {
+            glDisable(GL_TEXTURE_2D);
+        }
 
         /* restore the model matrix stack, and switch back to the matrix
         mode we were in. */
@@ -498,7 +507,9 @@ void drawTriangularPrism(int x, int y, int z) {
         glGetIntegerv(GL_MATRIX_MODE, &savemode);
         
         glEnable(GL_NORMALIZE);
-        glEnable(GL_TEXTURE_2D);
+        if (VAL(APPLY_TEX)) {
+            glEnable(GL_TEXTURE_2D);
+        }
 
         /* switch to the model matrix and scale by x,y,z. */
         glMatrixMode(GL_MODELVIEW);
@@ -533,7 +544,10 @@ void drawTriangularPrism(int x, int y, int z) {
         glTexCoord2d(0.0, 0.0); glVertex3d(0.0, 1.0, 1.0);
 
         glEnd();
-        glDisable(GL_TEXTURE_2D);
+
+        if (VAL(APPLY_TEX)) {
+            glDisable(GL_TEXTURE_2D);
+        }
 
         /* restore the model matrix stack, and switch back to the matrix
         mode we were in. */
@@ -543,6 +557,46 @@ void drawTriangularPrism(int x, int y, int z) {
 
 }
 
+
+
+// ADDED
+
+void drawTorus(double R, double r) {
+    double s, t, x, y, z;
+    double twoPi = 2 * M_PI;
+
+    int numt = 32;
+
+    ModelerDrawState *mds = ModelerDrawState::Instance();
+    switch (mds->m_quality) {
+    case HIGH:
+        numt = 32; break;
+    case MEDIUM:
+        numt = 20; break;
+    case LOW:
+        numt = 12; break;
+    case POOR:
+        numt = 8; break;
+    }
+
+    int numc = 2 * numt;
+
+    for (int i = 0; i < numc; i++) {
+        glBegin(GL_QUAD_STRIP);
+        for (int j = 0; j <= numt; j++) {
+            for (int k = 1; k >= 0; k--) {
+                s = (i + k) % numc + 0.5;
+                t = j % numt;
+
+                x = (R + r * cos(s / numc * twoPi))*cos(t / numt * twoPi);
+                y = (R + r * cos(s / numc * twoPi))*sin(t / numt * twoPi);
+                z = r * sin(s * twoPi / numc);
+                glVertex3f(x, y, z);
+            }
+        }
+        glEnd();
+    }
+}
 
 
 

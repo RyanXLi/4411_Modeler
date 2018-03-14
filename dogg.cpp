@@ -81,6 +81,7 @@ void DoggModel::draw()
             drawTextureBox(1, 1, 1);
         glPopMatrix();
 
+
         if (VAL(LV_DETAIL) > 1) {
 
             if (VAL(DRAW_PROP)) {
@@ -161,6 +162,15 @@ void DoggModel::draw()
                 glPushMatrix();
                 glScaled(0.75, 2, 2);
                 drawTextureBox(1, 1, 1);
+                glPopMatrix();
+
+                // torus
+                //drawAxis();
+
+                glPushMatrix();
+                glTranslated(1.5, 1, 1);
+                glRotated(90, 0, 1, 0);
+                drawTorus(0.8, 0.2);
                 glPopMatrix();
             }
 
@@ -436,21 +446,7 @@ void DoggModel::resetLeg() {
 void DoggModel::init() {
     //texImg = Fl_Shared_Image::get("texImg.png", 256, 256);
     texImg = readBMP("texImg.bmp", texImgW, texImgH);
-
-    if (texImg == NULL) {
-        printf("file not found");
-    }
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texImgW, texImgH, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)texImg);
-    //glBindTexture(GL_TEXTURE_2D, tex);
-    //glEnable(GL_TEXTURE_2D);
-    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    //glEnable(GL_TEXTURE_2D);
-    //// Misc OpenGL settings
-    //glShadeModel(GL_FLAT);
-    //glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_LEQUAL);
+    if (texImg == nullptr) {printf("Texture image not found.\n");}
 
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
@@ -512,7 +508,7 @@ int main()
 
     controls[LV_DETAIL] = ModelerControl("Level of Detail", 1, 4, 1, 4);
 
-    controls[APPLY_TEX] = ModelerControl("Apply Texture", 0, 1, 1, 1);
+    controls[APPLY_TEX] = ModelerControl("Apply Texture", 0, 1, 1, 0);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
 
