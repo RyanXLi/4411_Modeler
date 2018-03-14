@@ -22,6 +22,7 @@ enum SampleModelControls
     LIGHT0_R, LIGHT0_G, LIGHT0_B,
     DRAW_PROP,
     LV_DETAIL,
+    APPLY_TEX,
     NUMCONTROLS
 };
 

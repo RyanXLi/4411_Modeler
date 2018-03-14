@@ -2,6 +2,7 @@
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include <FL/gl.h>
+#include "bitmap.h"
 #include <math.h>
 
 #include "modelerglobals.h"
@@ -14,8 +15,14 @@ public:
         : ModelerView(x,y,w,h,label) { }
 
     virtual void draw();
+    void init();
     void drawAxis();
     void resetLeg();
+    unsigned char * texImg;
+    int texImgW = 256;
+    int texImgH = 256;
+    GLuint tex = 0;
+    bool firstTime = 1;
 };
 
 // We need to make a creator function, mostly because of
@@ -29,6 +36,12 @@ ModelerView* createDoggModel(int x, int y, int w, int h, char *label)
 // method of ModelerView to draw out DoggModel
 void DoggModel::draw()
 {
+
+    if (firstTime) {
+        init();
+        firstTime = 0;
+    }
+
     // This call takes care of a lot of the nasty projection 
     // matrix stuff.  Unless you want to fudge directly with the 
 	// projection matrix, don't bother with this ...
@@ -38,7 +51,6 @@ void DoggModel::draw()
     //DoggModel::drawAxis();
 
     if (VAL(RESET_LEG)) { DoggModel::resetLeg(); }
-
 
 
 	// draw the dogg model
@@ -51,7 +63,7 @@ void DoggModel::draw()
 		glPushMatrix();
 		    glTranslated(-2, 0, -1);
             glScaled(2, 3, 2);
-		    drawBox(1,1,1);
+		    drawTextureBox(1,1,1);
 		glPopMatrix();
 
 
@@ -66,7 +78,7 @@ void DoggModel::draw()
         glPushMatrix();
             glTranslated(0, 1.5, -1);
             glScaled(4.5, 1.5, 2);
-            drawBox(1, 1, 1);
+            drawTextureBox(1, 1, 1);
         glPopMatrix();
 
         if (VAL(LV_DETAIL) > 1) {
@@ -74,13 +86,14 @@ void DoggModel::draw()
             if (VAL(DRAW_PROP)) {
                 // propeller
                 // left
+
                 glPushMatrix();
                 glTranslated(1, 2.5, 0.9);
                 glRotated(60, 1, 0, 0);
 
                 glPushMatrix();
                 glScaled(0.3, 1.2, 0.3);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 glTranslated(-1.5, 0.8 - 0.2 + 0.8, 0);
@@ -97,7 +110,7 @@ void DoggModel::draw()
 
                 glPushMatrix();
                 glScaled(0.3, 1.2, 0.3);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 glTranslated(-1.5, 0.8 - 0.2 + 0.8, +0.15);
@@ -106,6 +119,8 @@ void DoggModel::draw()
                 drawCylinder(3, 0.8, 0.8);
                 glPopMatrix();
                 glPopMatrix();
+
+            
 
             }
 
@@ -121,7 +136,7 @@ void DoggModel::draw()
 
             glPushMatrix();
             glScaled(1.5, 2.2, 2);
-            drawBox(1, 1, 1);
+            drawTextureBox(1, 1, 1);
             glPopMatrix();
 
             // head
@@ -138,14 +153,14 @@ void DoggModel::draw()
 
                 glPushMatrix();
                 glScaled(0.75, 3, 2);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 glTranslated(0.75, 0, 0);
 
                 glPushMatrix();
                 glScaled(0.75, 2, 2);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
                 glPopMatrix();
             }
 
@@ -167,7 +182,7 @@ void DoggModel::draw()
                 glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(frontLegSize, 2 + 0.5, frontLegSize);
-                    drawBox(1, 1, 1);
+                    drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 if (VAL(LV_DETAIL) > 2) {
@@ -178,7 +193,7 @@ void DoggModel::draw()
                     glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(frontLegSize, 1.5, frontLegSize);
-                    drawBox(1, 1, 1);
+                    drawTextureBox(1, 1, 1);
                     glPopMatrix();
 
                     if (VAL(LV_DETAIL) > 3) {
@@ -189,7 +204,7 @@ void DoggModel::draw()
                         glPushMatrix();
                         glRotated(-180, 0, 0, 1);
                         glScaled(1, 0.3, frontLegSize);
-                        drawBox(1, 1, 1);
+                        drawTextureBox(1, 1, 1);
                         glPopMatrix();
                     }
                 }
@@ -213,7 +228,7 @@ void DoggModel::draw()
                 glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(frontLegSize, 2 + 0.5, frontLegSize);
-                    drawBox(1, 1, 1);
+                    drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 glTranslated(0, -2 - 0.5 + 0.2, 0);
@@ -223,7 +238,7 @@ void DoggModel::draw()
                     glPushMatrix();
                         glRotated(-180, 0, 0, 1);
                         glScaled(frontLegSize, 1.5, frontLegSize);
-                        drawBox(1, 1, 1);
+                        drawTextureBox(1, 1, 1);
                     glPopMatrix();
 
 
@@ -234,7 +249,7 @@ void DoggModel::draw()
                         glPushMatrix();
                             glRotated(-180, 0, 0, 1);
                             glScaled(1, 0.3, frontLegSize);
-                            drawBox(1, 1, 1);
+                            drawTextureBox(1, 1, 1);
                         glPopMatrix();
                     }
                 }
@@ -262,7 +277,7 @@ void DoggModel::draw()
             glPushMatrix();
             glRotated(-180, 0, 0, 1);
             glScaled(backLegSize, 2.5 + aux, backLegSize);
-            drawBox(1, 1, 1);
+            drawTextureBox(1, 1, 1);
             glPopMatrix();
 
 
@@ -276,7 +291,7 @@ void DoggModel::draw()
                 glPushMatrix();
                 glRotated(-180, 0, 0, 1);
                 glScaled(backLegSize, 3, backLegSize);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 glTranslated(0, -3 + 3 * aux, 0);
@@ -290,7 +305,7 @@ void DoggModel::draw()
                     glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(1, 0.3, backLegSize);
-                    drawBox(1, 1, 1);
+                    drawTextureBox(1, 1, 1);
                     glPopMatrix();
                 }
             }
@@ -311,7 +326,7 @@ void DoggModel::draw()
             glPushMatrix();
             glRotated(-180, 0, 0, 1);
             glScaled(backLegSize, 2.5 + aux, backLegSize);
-            drawBox(1, 1, 1);
+            drawTextureBox(1, 1, 1);
             glPopMatrix();
 
 
@@ -324,7 +339,7 @@ void DoggModel::draw()
                 glPushMatrix();
                 glRotated(-180, 0, 0, 1);
                 glScaled(backLegSize, 3, backLegSize);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
                 glPopMatrix();
 
                 glTranslated(0, -3 + 3 * aux, 0);
@@ -337,7 +352,7 @@ void DoggModel::draw()
                     glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(1, 0.3, backLegSize);
-                    drawBox(1, 1, 1);
+                    drawTextureBox(1, 1, 1);
                     glPopMatrix();
                 }
             }
@@ -352,7 +367,7 @@ void DoggModel::draw()
                 glRotated(VAL(TAIL_ANGLE_Y), 0, 1, 0);
                 glRotated(-150 + VAL(TAIL_ANGLE_Z), 0, 0, 1);
                 glScaled(0.2, 2.5, 0.2);
-                drawBox(1, 1, 1);
+                drawTextureBox(1, 1, 1);
             glPopMatrix();
 
         }
@@ -418,6 +433,41 @@ void DoggModel::resetLeg() {
     SET(RESET_LEG, 0);
 }
 
+void DoggModel::init() {
+    //texImg = Fl_Shared_Image::get("texImg.png", 256, 256);
+    texImg = readBMP("texImg.bmp", texImgW, texImgH);
+
+    if (texImg == NULL) {
+        printf("file not found");
+    }
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texImgW, texImgH, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)texImg);
+    //glBindTexture(GL_TEXTURE_2D, tex);
+    //glEnable(GL_TEXTURE_2D);
+    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glEnable(GL_TEXTURE_2D);
+    //// Misc OpenGL settings
+    //glShadeModel(GL_FLAT);
+    //glEnable(GL_DEPTH_TEST);
+    //glDepthFunc(GL_LEQUAL);
+
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    //float pixels[] = {
+    //    0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f,
+    //    0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f
+    //};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texImgW, texImgH, 0, GL_RGB, GL_UNSIGNED_BYTE, texImg);
+
+}
 
 int main()
 {
@@ -460,8 +510,11 @@ int main()
 
     controls[DRAW_PROP] = ModelerControl("Draw propeller?", 0, 1, 1, 1);
 
-    controls[LV_DETAIL] = ModelerControl("Level of Detail", 1, 4, 1, 1);
+    controls[LV_DETAIL] = ModelerControl("Level of Detail", 1, 4, 1, 4);
+
+    controls[APPLY_TEX] = ModelerControl("Apply Texture", 0, 1, 1, 1);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
+
     return ModelerApplication::Instance()->Run();
 }
