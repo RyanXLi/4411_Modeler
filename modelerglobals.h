@@ -24,6 +24,7 @@ enum SampleModelControls
     DRAW_PROP,
     LV_DETAIL,
     APPLY_TEX,
+	LSYSTEM_SWITCH, LSYSTEM_STAGE,
     NUMCONTROLS
 };
 
