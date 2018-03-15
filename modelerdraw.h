@@ -98,4 +98,6 @@ void drawTriangle( double x1, double y1, double z1,
 // ADDED!
 void drawTriangularPrism(int x, int y, int z);
 
+void drawTorus(double R, double r);
+
 #endif
