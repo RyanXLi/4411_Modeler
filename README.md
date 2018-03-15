@@ -28,7 +28,7 @@ Current Count: 8
 
 - [ ] (1)Build a complex shape as a set of polygonal faces, using the "triangle" primitive to render them.
 
-- [ ] (1)Make an additional "animated" sequence your character can perform.  Although you can try to use a timed callback "add_idle" (see [here](http://www.fltk.org/documentation.php) for more information), an easier solution is just to increment values each time your model's draw() function is called. If you use the menu option to turn on animation, your draw() function will be executed at around 30 times per second.
+- [x] (1)Make an additional "animated" sequence your character can perform.  Although you can try to use a timed callback "add_idle" (see [here](http://www.fltk.org/documentation.php) for more information), an easier solution is just to increment values each time your model's draw() function is called. If you use the menu option to turn on animation, your draw() function will be executed at around 30 times per second.
 
 - [x] (1.5)Add some widgets that control adjustable parameters to your model so that you can create individual-looking instances of your character.  Try to make these actually different individuals, not just "the red guy" and "the blue guy."
 
@@ -42,9 +42,9 @@ Current Count: 8
 
 - [x] (2)Add a function in your model file for drawing a new type of primitive. The following examples will definitely garner two bells ; if you come up with your own primitive, you will be awarded one or two bells based on its coolness. 1) Extruded surface - given two curves, create a surface by sweeping one curve along the path defined by the other curve. 2) Surfaces of rotation - given a curve and a rotation axis, sweep out a surface by rotating the curve around the axis. 3) Torus.
 
-- [ ] (2) Variable, Use some sort of procedural modeling (such as an [L-system](http://vlab.infotech.monash.edu.au/tutorials/l-systems/)) to generate all or part of your character. Have parameters of the procedural modeler controllable by the user via control widgets.
+- [x] (2) Variable, Use some sort of procedural modeling (such as an [L-system](http://vlab.infotech.monash.edu.au/tutorials/l-systems/)) to generate all or part of your character. Have parameters of the procedural modeler controllable by the user via control widgets.
 
-- [ ] (2)In addition to mood cycling, have your character react differently to UI controls depending on what mood they are in.  Again, there is some weight in this item because the character reactions are supposed to make sense in a story telling way.  Think about the mood that the character is in, think about the things that you might want the character to do, and then provide a means for expressing and controlling those actions.
+- [x] (2)In addition to mood cycling, have your character react differently to UI controls depending on what mood they are in.  Again, there is some weight in this item because the character reactions are supposed to make sense in a story telling way.  Think about the mood that the character is in, think about the things that you might want the character to do, and then provide a means for expressing and controlling those actions.
 
 - [ ] (4)One difficulty with hierarchical modeling using primitives is the difficulty of building "organic" shapes. It's difficult, for instance, to make a convincing looking human arm because you can't really show the bending of the skin and bulging of the muscle using cylinders and spheres. There has, however, been success in building organic shapes using [metaballs](http://en.wikipedia.org/wiki/Metaballs). Implement your hierarchical model and "skin" it with metaballs. Hint: look up "marching cubes" and "marching tetrahedra" --these are two commonly used algorithms for volume rendering. Here is a [demo application](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/metaballs_demo.zip) by Joe Hall and Eugene Hsu that shows metaballs in action.
 

@@ -24,6 +24,9 @@ public:
     void resetLeg();
 	void frameAll(float dx, float dy, float dz);
     void animate(int index);
+    void moveHead();
+    void moveTail();
+    bool checkLegParam();
 
 
     unsigned char * texImg;
@@ -31,6 +34,15 @@ public:
     int texImgH = 256;
     GLuint tex = 0;
     bool firstTime = 1;
+    bool shouldMoveHead = 0;
+    bool shouldMoveTail = 0;
+    int headBoundary = 45;
+    int tailBoundary = 45;
+    int headBoundaryCount = 0;
+    int tailBoundaryCount = 0;
+    int headIncr = 1;
+    int tailIncr = 1;
+    bool hasDiffLegParam = 0;
 
     double anim_incr [12] = {
         5, 5, 5,
@@ -53,6 +65,13 @@ public:
         45, 45, 45
     };
 
+    double last_angle[12] = {
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0
+    };
+    
 };
 
 // We need to make a creator function, mostly because of
@@ -82,32 +101,11 @@ void DoggModel::draw()
 	
 	ModelerView::draw();
 
-    //DoggModel::drawAxis();
-
     if (VAL(RESET_LEG)) { DoggModel::resetLeg(); }
 
+    hasDiffLegParam = checkLegParam();
 
 	// draw the dogg model
-
-    // increments per frame in the animation
-
-    //double anim_LFrontleg_upper_incr = 1;
-    //double anim_LFrontleg_lower_incr = 1;
-    //double anim_LFrontleg_feet_incr = 1;
-    //
-    //double anim_RFrontleg_upper_incr = -1;
-    //double anim_RFrontleg_lower_incr = -1;
-    //double anim_RFrontleg_feet_incr = -1;
-    //
-    //double anim_LBackleg_upper_incr = 1;
-    //double anim_LBackleg_lower_incr = 1;
-    //double anim_LBackleg_feet_incr = 1;
-    //
-    //double anim_RBackleg_upper_incr = -1;
-    //double anim_RBackleg_lower_incr = -1;
-    //double anim_RBackleg_feet_incr = -1;
-
-
 
 	setAmbientColor(.1f,.1f,.1f);
 	setDiffuseColor(1.0f, 1.0f, 1.0f);
@@ -206,6 +204,11 @@ void DoggModel::draw()
                 glRotated(VAL(HEAD_ANGLE_X), 1, 0, 0);
                 glTranslated(0, 0, -1);
                 glRotated(VAL(HEAD_ANGLE_Z), 0, 0, 1);
+
+                if (VAL(CHEERFULNESS) < 0 && hasDiffLegParam) {
+                    shouldMoveHead = 1;                    
+                }
+                moveHead();
 
                 glPushMatrix();
                 glScaled(0.75, 3, 2);
@@ -442,6 +445,12 @@ void DoggModel::draw()
                 glTranslated(4.5, 2, -0.1);
                 glRotated(VAL(TAIL_ANGLE_X), 1, 0, 0);
                 glRotated(VAL(TAIL_ANGLE_Y), 0, 1, 0);
+
+                if (VAL(CHEERFULNESS) > 0 && hasDiffLegParam) {
+                    shouldMoveTail = 1;                    
+                }
+                moveTail();
+
                 glRotated(-150 + VAL(TAIL_ANGLE_Z), 0, 0, 1);
                 glScaled(0.2, 2.5, 0.2);
                 drawTextureBox(1, 1, 1);
@@ -457,8 +466,52 @@ void DoggModel::draw()
 		}
 
 	glPopMatrix();
+
 }
 
+
+bool DoggModel::checkLegParam() {
+    bool ret = FALSE;
+    for (int i = 0; i < 12; i++) {
+        if (VAL(LEFT_FRONT_ANGLE1 + i) != last_angle[i]) {
+            ret = TRUE;
+            last_angle[i] = VAL(LEFT_FRONT_ANGLE1 + i);
+        }
+    }
+    return ret;
+}
+
+void DoggModel::moveHead() {
+    if (!shouldMoveHead) {
+        return;
+    }
+    if (headBoundaryCount >= 2) {
+        shouldMoveHead = 0;
+        headBoundaryCount = 0;
+    }
+    if (VAL(HEAD_ANGLE_X) + headIncr >= headBoundary 
+        || VAL(HEAD_ANGLE_X) + headIncr <= -headBoundary) {
+        headBoundaryCount++;
+        headIncr = -headIncr;
+    }
+    SET(HEAD_ANGLE_X, VAL(HEAD_ANGLE_X) + headIncr);
+}
+
+void DoggModel::moveTail() {
+    if (!shouldMoveTail) {
+        return;
+    }
+    if (tailBoundaryCount >= 2) {
+        shouldMoveTail = 0;
+        tailBoundaryCount = 0;
+    }
+    if (VAL(TAIL_ANGLE_Y) + tailIncr >= tailBoundary
+        || VAL(TAIL_ANGLE_Y) + tailIncr <= -tailBoundary) {
+        tailBoundaryCount++;
+        tailIncr = -tailIncr;
+    }
+    SET(TAIL_ANGLE_Y, VAL(TAIL_ANGLE_Y) + tailIncr);
+}
 
 void DoggModel::drawAxis() {
     // draw axis
@@ -679,6 +732,8 @@ int main()
 
 	controls[LSYSTEM_SWITCH] = ModelerControl("Display Tree", 0, 1, 1, 0);
 	controls[LSYSTEM_STAGE] = ModelerControl("LSystem Stage", 1, 6, 1, 3);
+
+    controls[CHEERFULNESS] = ModelerControl("cheerfulness level", -1, 1, 1, 0);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
 
