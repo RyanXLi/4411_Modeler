@@ -75,6 +75,9 @@ private:
     static void SliderCallback(Fl_Slider *, void*);
 	static void RedrawLoop(void*);
 
+// ADDED
+public:
+//END
 	// Just a flag for updates
 	bool m_animating;
 };

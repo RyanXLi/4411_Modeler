@@ -21,11 +21,36 @@ public:
     void drawAxis();
     void resetLeg();
 	void frameAll(float dx, float dy, float dz);
+    void animate(int index);
+
+
     unsigned char * texImg;
     int texImgW = 256;
     int texImgH = 256;
     GLuint tex = 0;
     bool firstTime = 1;
+
+    double anim_incr [12] = {
+        5, 5, 5,
+        -5, -5, -5,
+        5, 5, 5,
+        -5, -5, -5
+    };
+
+    double anim_min [12] = {
+        -45, -45, -45,
+        -45, -45, -45,
+        -45, -45, -45,
+        -45, -45, -45
+    };
+
+    double anim_max [12] = {
+        45, 45, 45,
+        45, 45, 45,
+        45, 45, 45,
+        45, 45, 45
+    };
+
 };
 
 // We need to make a creator function, mostly because of
@@ -61,6 +86,27 @@ void DoggModel::draw()
 
 
 	// draw the dogg model
+
+    // increments per frame in the animation
+
+    //double anim_LFrontleg_upper_incr = 1;
+    //double anim_LFrontleg_lower_incr = 1;
+    //double anim_LFrontleg_feet_incr = 1;
+    //
+    //double anim_RFrontleg_upper_incr = -1;
+    //double anim_RFrontleg_lower_incr = -1;
+    //double anim_RFrontleg_feet_incr = -1;
+    //
+    //double anim_LBackleg_upper_incr = 1;
+    //double anim_LBackleg_lower_incr = 1;
+    //double anim_LBackleg_feet_incr = 1;
+    //
+    //double anim_RBackleg_upper_incr = -1;
+    //double anim_RBackleg_lower_incr = -1;
+    //double anim_RBackleg_feet_incr = -1;
+
+
+
 	setAmbientColor(.1f,.1f,.1f);
 	setDiffuseColor(1.0f, 1.0f, 1.0f);
 	glPushMatrix();
@@ -195,6 +241,7 @@ void DoggModel::draw()
 
                 // rotate
                 glRotated(VAL(RIGHT_FRONT_ANGLE1), 0, 0, 1);
+                animate(RIGHT_FRONT_ANGLE1);
 
                 glPushMatrix();
                     glRotated(-180, 0, 0, 1);
@@ -206,6 +253,7 @@ void DoggModel::draw()
 
                     glTranslated(0, -2 - 0.5 + 0.2, 0);
                     glRotated(VAL(RIGHT_FRONT_ANGLE2), 0, 0, 1);
+                    animate(RIGHT_FRONT_ANGLE2);
 
                     glPushMatrix();
                     glRotated(-180, 0, 0, 1);
@@ -217,6 +265,7 @@ void DoggModel::draw()
 
                         glTranslated(0, -1.5 + 0.2, 0);
                         glRotated(VAL(RIGHT_FRONT_ANGLE3), 0, 0, 1);
+                        animate(RIGHT_FRONT_ANGLE3);
 
                         glPushMatrix();
                         glRotated(-180, 0, 0, 1);
@@ -241,6 +290,7 @@ void DoggModel::draw()
 
                 // rotate
                 glRotated(VAL(LEFT_FRONT_ANGLE1), 0, 0, 1);
+                animate(LEFT_FRONT_ANGLE1);
 
                 glPushMatrix();
                     glRotated(-180, 0, 0, 1);
@@ -250,6 +300,7 @@ void DoggModel::draw()
 
                 glTranslated(0, -2 - 0.5 + 0.2, 0);
                 glRotated(VAL(LEFT_FRONT_ANGLE2), 0, 0, 1);
+                animate(LEFT_FRONT_ANGLE2);
 
                 if (VAL(LV_DETAIL) > 2) {
                     glPushMatrix();
@@ -261,6 +312,7 @@ void DoggModel::draw()
 
                     glTranslated(0, -1.5 + 0.2, 0);
                     glRotated(VAL(LEFT_FRONT_ANGLE3), 0, 0, 1);
+                    animate(LEFT_FRONT_ANGLE3);
 
                     if (VAL(LV_DETAIL) > 3) {
                         glPushMatrix();
@@ -290,6 +342,7 @@ void DoggModel::draw()
             glTranslated(backLegX, backLegY + aux, backLegZ);
             // rotate
             glRotated(VAL(RIGHT_BACK_ANGLE1), 0, 0, 1);
+            animate(RIGHT_BACK_ANGLE1);
 
             glPushMatrix();
             glRotated(-180, 0, 0, 1);
@@ -301,6 +354,7 @@ void DoggModel::draw()
             glTranslated(0, -2.5 + aux, 0);
             // rotate
             glRotated(VAL(RIGHT_BACK_ANGLE2), 0, 0, 1);
+            animate(RIGHT_BACK_ANGLE2);
 
             if (VAL(LV_DETAIL) > 2) {
 
@@ -315,6 +369,7 @@ void DoggModel::draw()
 
                 // rotate
                 glRotated(VAL(RIGHT_BACK_ANGLE3), 0, 0, 1);
+                animate(RIGHT_BACK_ANGLE3);
                 glRotated(30, 0, 0, 1);
 
                 if (VAL(LV_DETAIL) > 3) {
@@ -339,6 +394,7 @@ void DoggModel::draw()
             glTranslated(backLegX, backLegY + aux, backLegZ);
             // rotate
             glRotated(VAL(LEFT_BACK_ANGLE1), 0, 0, 1);
+            animate(LEFT_BACK_ANGLE1);
 
             glPushMatrix();
             glRotated(-180, 0, 0, 1);
@@ -350,6 +406,7 @@ void DoggModel::draw()
             glTranslated(0, -2.5 + aux, 0);
             // rotate
             glRotated(VAL(LEFT_BACK_ANGLE2), 0, 0, 1);
+            animate(LEFT_BACK_ANGLE2);
 
             if (VAL(LV_DETAIL) > 2) {
                 glRotated(-30, 0, 0, 1);
@@ -363,6 +420,7 @@ void DoggModel::draw()
 
                 // rotate
                 glRotated(VAL(LEFT_BACK_ANGLE3), 0, 0, 1);
+                animate(LEFT_BACK_ANGLE3);
                 glRotated(30, 0, 0, 1);
 
                 if (VAL(LV_DETAIL) > 3) {
@@ -477,6 +535,18 @@ void DoggModel::init() {
     //};
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texImgW, texImgH, 0, GL_RGB, GL_UNSIGNED_BYTE, texImg);
 
+}
+
+void DoggModel::animate(int index) {
+
+    if (ModelerApplication::Instance()->m_animating) {
+        int anim_part_count = index - LEFT_FRONT_ANGLE1;
+
+        if (VAL(index) >= anim_max[anim_part_count] || VAL(index) <= anim_min[anim_part_count]) {
+            anim_incr[anim_part_count] = - anim_incr[anim_part_count];
+        }
+        SET(index, VAL(index) + anim_incr[anim_part_count]);
+    }
 }
 
 
