@@ -5,7 +5,7 @@
 #include <FL/gl.h>
 #include "bitmap.h"
 #include <math.h>
-
+#include <vector>
 #include "modelerglobals.h"
 
 class camera;
@@ -18,6 +18,8 @@ public:
 
     virtual void draw();
     void init();
+	std::vector<char> gsentence(const int stage);
+	void drawLsystem(const std::vector<char> & sentence);
     void drawAxis();
     void resetLeg();
 	void frameAll(float dx, float dy, float dz);
@@ -446,7 +448,15 @@ void DoggModel::draw()
             glPopMatrix();
 
         }
-        glPopMatrix();
+		
+		if (VAL(LSYSTEM_SWITCH)) {
+			std::vector<char> sen = gsentence(VAL(LSYSTEM_STAGE));
+			glPushMatrix();
+				drawLsystem(sen);
+			glPopMatrix();
+		}
+
+	glPopMatrix();
 }
 
 
@@ -537,6 +547,77 @@ void DoggModel::init() {
 
 }
 
+std::vector<char> DoggModel::gsentence(const int stage)
+{
+	std::vector<char> current, next;
+	current.push_back('F');
+	for (int i = 0; i < stage; ++i) {
+		next.clear();
+		for (int l = 0; l < current.size(); ++l) {
+			// F -¡ú FF+[+F-F-F]-[-F+F+F]
+			if (current[l] == 'F') {
+				next.push_back('F');
+				next.push_back('F');
+				next.push_back('+');
+				next.push_back('[');
+				next.push_back('+');
+				next.push_back('F');
+				next.push_back('-');
+				next.push_back('F');
+				next.push_back('-');
+				next.push_back('F');
+				next.push_back(']');
+				next.push_back('-');
+				next.push_back('[');
+				next.push_back('-');
+				next.push_back('F');
+				next.push_back('+');
+				next.push_back('F');
+				next.push_back('+');
+				next.push_back('F');
+				next.push_back(']');
+			}
+			else next.push_back(current[l]);
+		}
+		current = next;
+	}
+	//for (int i = 0; i < current.size(); ++i) printf("%c", current[i]);
+	//printf("\n");
+	return current;
+}
+
+void DoggModel::drawLsystem(const std::vector<char>& sentence)
+{
+	float len = 0.2;
+	glTranslated(1, 2.5, 0);
+	for (int i = 0; i < sentence.size(); ++i) {
+		char c = sentence[i];
+		switch (c) {
+		case 'F':
+			glLineWidth(3.0f);
+			glBegin(GL_LINES);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(0.0f, len, 0.0f);
+			glEnd();
+			glTranslatef(0.0f, len, 0.0f);
+			break;
+		case '+':
+			glRotatef(-25, 0, 0, 1);
+			break;
+		case '-':
+			glRotatef(25, 0, 0, 1);
+			break;
+		case '[':
+			glPushMatrix();
+			break;
+		case ']':
+			glPopMatrix();
+			break;
+		default: break;
+		}
+	}
+}
+
 void DoggModel::animate(int index) {
 
     if (ModelerApplication::Instance()->m_animating) {
@@ -595,6 +676,9 @@ int main()
     controls[LV_DETAIL] = ModelerControl("Level of Detail", 1, 4, 1, 4);
 
     controls[APPLY_TEX] = ModelerControl("Apply Texture", 0, 1, 1, 0);
+
+	controls[LSYSTEM_SWITCH] = ModelerControl("Display Tree", 0, 1, 1, 0);
+	controls[LSYSTEM_STAGE] = ModelerControl("LSystem Stage", 1, 6, 1, 3);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
 
