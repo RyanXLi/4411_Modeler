@@ -10,6 +10,34 @@
 
 #include "modelerglobals.h"
 
+// ADDED
+class XYZ {
+
+public:
+    XYZ() {}
+    XYZ(double a, double b, double c) {
+        x = a;
+        y = b;
+        z = c;
+    }
+    double x = 0;
+    double y = 0;
+    double z = 0;
+};
+
+class Cell {
+public:
+    Cell(XYZ* p_in, double* val_in) {
+        // both have length 8
+        p = p_in;
+        val = val_in;
+    }
+    XYZ* p;
+    double* val;
+
+};
+// END
+
 
 enum DrawModeSetting_t 
 { NONE=0, NORMAL, WIREFRAME, FLATSHADE, };
@@ -99,5 +127,10 @@ void drawTriangle( double x1, double y1, double z1,
 void drawTriangularPrism(int x, int y, int z);
 
 void drawTorus(double R, double r);
+
+double metaballFunc(double x0, double y0, double z0, double x, double y, double z);
+XYZ VertexInterp(double threshold, XYZ v1, XYZ v2, double val1, double val2);
+void triangulize(double threshold, Cell grid);
+void drawMetaball(double threshold, const double r, double(*metaballFunc)(double x, double y, double z));
 
 #endif

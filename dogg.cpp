@@ -134,6 +134,19 @@ void DoggModel::draw()
             drawTextureBox(1, 1, 1);
         glPopMatrix();
 
+        // test metaball
+        //glPushMatrix();
+        //glTranslated(0, 5, 0);
+        //glRotated(90, 0, 0, 1);
+        //glScaled(1, 1, 1);
+        //
+        //auto m_func = [](double x, double y, double z) 
+        //    -> double {return metaballFunc(-0.5, 0, 0, x, y, z) + metaballFunc(0.5, 0, 0, x, y, z); };
+        //
+        //drawMetaball(m_func(1, 0, 0), 2, m_func);
+        //glPopMatrix();
+
+
 
         if (VAL(LV_DETAIL) > 1) {
 
@@ -248,11 +261,25 @@ void DoggModel::draw()
                 glRotated(VAL(RIGHT_FRONT_ANGLE1), 0, 0, 1);
                 animate(RIGHT_FRONT_ANGLE1);
 
-                glPushMatrix();
+                if (VAL(METABALL)) {
+                    glPushMatrix();
+                    glTranslated(-0.3, -1.25, 0.3);
+                    glRotated(-90, 0, 0, 1);
+                    glScaled(1, 0.8, 0.8);
+
+                    auto m_func = [](double x, double y, double z)
+                        -> double {return metaballFunc(-0.55, 0, 0, x, y, z) + metaballFunc(0.55, 0, 0, x, y, z); };
+
+                    drawMetaball(m_func(1.12, 0, 0), 1, m_func);
+                    glPopMatrix();
+                }
+                else {
+                    glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(frontLegSize, 2 + 0.5, frontLegSize);
                     drawTextureBox(1, 1, 1);
-                glPopMatrix();
+                    glPopMatrix();
+                }
 
                 if (VAL(LV_DETAIL) > 2) {
 
@@ -260,11 +287,25 @@ void DoggModel::draw()
                     glRotated(VAL(RIGHT_FRONT_ANGLE2), 0, 0, 1);
                     animate(RIGHT_FRONT_ANGLE2);
 
-                    glPushMatrix();
-                    glRotated(-180, 0, 0, 1);
-                    glScaled(frontLegSize, 1.5, frontLegSize);
-                    drawTextureBox(1, 1, 1);
-                    glPopMatrix();
+                    if (VAL(METABALL)) {
+                        glPushMatrix();
+                        glTranslated(-0.3, -1.25 + 0.6, 0.3);
+                        glRotated(-90, 0, 0, 1);
+                        glScaled(0.8, 0.6, 0.6);
+
+                        auto m_func = [](double x, double y, double z)
+                            -> double {return metaballFunc(-0.55, 0, 0, x, y, z) + metaballFunc(0.55, 0, 0, x, y, z); };
+
+                        drawMetaball(m_func(1.12, 0, 0), 1, m_func);
+                        glPopMatrix();
+                    }
+                    else {
+                        glPushMatrix();
+                        glRotated(-180, 0, 0, 1);
+                        glScaled(frontLegSize, 1.5, frontLegSize);
+                        drawTextureBox(1, 1, 1);
+                        glPopMatrix();
+                    }
 
                     if (VAL(LV_DETAIL) > 3) {
 
@@ -297,22 +338,51 @@ void DoggModel::draw()
                 glRotated(VAL(LEFT_FRONT_ANGLE1), 0, 0, 1);
                 animate(LEFT_FRONT_ANGLE1);
 
-                glPushMatrix();
+                if (VAL(METABALL)) {
+                    glPushMatrix();
+                    glTranslated(-0.3, -1.25, 0.3);
+                    glRotated(-90, 0, 0, 1);
+                    glScaled(1, 0.8, 0.8);
+
+                    auto m_func = [](double x, double y, double z)
+                        -> double {return metaballFunc(-0.55, 0, 0, x, y, z) + metaballFunc(0.55, 0, 0, x, y, z); };
+
+                    drawMetaball(m_func(1.12, 0, 0), 1, m_func);
+                    glPopMatrix();
+                }
+                else {
+                    glPushMatrix();
                     glRotated(-180, 0, 0, 1);
                     glScaled(frontLegSize, 2 + 0.5, frontLegSize);
                     drawTextureBox(1, 1, 1);
-                glPopMatrix();
+                    glPopMatrix();
+                }
 
                 glTranslated(0, -2 - 0.5 + 0.2, 0);
                 glRotated(VAL(LEFT_FRONT_ANGLE2), 0, 0, 1);
                 animate(LEFT_FRONT_ANGLE2);
 
                 if (VAL(LV_DETAIL) > 2) {
-                    glPushMatrix();
+
+                    if (VAL(METABALL)) {
+                        glPushMatrix();
+                        glTranslated(-0.3, -1.25 + 0.6, 0.3);
+                        glRotated(-90, 0, 0, 1);
+                        glScaled(0.8, 0.6, 0.6);
+
+                        auto m_func = [](double x, double y, double z)
+                            -> double {return metaballFunc(-0.55, 0, 0, x, y, z) + metaballFunc(0.55, 0, 0, x, y, z); };
+
+                        drawMetaball(m_func(1.12, 0, 0), 1.5, m_func);
+                        glPopMatrix();
+                    }
+                    else {
+                        glPushMatrix();
                         glRotated(-180, 0, 0, 1);
                         glScaled(frontLegSize, 1.5, frontLegSize);
                         drawTextureBox(1, 1, 1);
-                    glPopMatrix();
+                        glPopMatrix();
+                    }
 
 
                     glTranslated(0, -1.5 + 0.2, 0);
@@ -734,6 +804,9 @@ int main()
 	controls[LSYSTEM_STAGE] = ModelerControl("LSystem Stage", 1, 6, 1, 3);
 
     controls[CHEERFULNESS] = ModelerControl("cheerfulness level", -1, 1, 1, 0);
+
+    controls[METABALL] = ModelerControl("Enable metaball", 0, 1, 1, 0);
+    controls[METABALL_RESOLUTION] = ModelerControl("Metaball Resolution", 0.05, 0.3, 0.01, 0.15);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
 
