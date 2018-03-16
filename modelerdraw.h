@@ -29,11 +29,26 @@ class Cell {
 public:
     Cell(XYZ* p_in, double* val_in) {
         // both have length 8
-        p = p_in;
-        val = val_in;
+        p[0] = p_in[0];
+        p[1] = p_in[1];
+        p[2] = p_in[2];
+        p[3] = p_in[3];
+        p[4] = p_in[4];
+        p[5] = p_in[5];
+        p[6] = p_in[6];
+        p[7] = p_in[7];
+
+        val[0] = val_in[0];
+        val[1] = val_in[1];
+        val[2] = val_in[2];
+        val[3] = val_in[3];
+        val[4] = val_in[4];
+        val[5] = val_in[5];
+        val[6] = val_in[6];
+        val[7] = val_in[7];
     }
-    XYZ* p;
-    double* val;
+    XYZ p[8];
+    double val[8];
 
 };
 // END
