@@ -111,6 +111,16 @@ void DoggModel::draw()
 
 	setAmbientColor(.1f,.1f,.1f);
 	setDiffuseColor(1.0f, 1.0f, 1.0f);
+
+	if (VAL(IK_SWITCH)) {
+		glPushMatrix();
+		glTranslatef(VAL(IK_X), VAL(IK_Y), VAL(IK_Z));
+		drawSphere(0.15);
+		glPopMatrix();
+	}
+
+	Vec3f vIK(VAL(IK_X), VAL(IK_Y), VAL(IK_Z));
+
 	glPushMatrix();
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 
@@ -331,7 +341,7 @@ void DoggModel::draw()
 
 
 
-            // part5, 9, 12 back right leg
+			// part5, 9, 12 back right leg
 
             double backLegSize = 0.6;
             double backLegX = 4.5;
@@ -342,8 +352,93 @@ void DoggModel::draw()
 
             glPushMatrix();
             glTranslated(backLegX, backLegY + aux, backLegZ);
+			//drawAxis();
             // rotate
-            glRotated(VAL(RIGHT_BACK_ANGLE1), 0, 0, 1);
+
+			float alpha1, alpha2;
+			const float l1 = 2.3, l2 = 3.0;
+			if (VAL(IK_SWITCH)) {
+				Mat4f mTrans, mRota;
+				Vec3f vTrans(- backLegX, - (backLegY + aux), -backLegZ);
+				MakeHTrans(mTrans, vTrans);
+				vIK = (mTrans * vIK);
+				std::cout << vIK << std::endl;
+				float theta = atanf(vIK[2] / vIK[1]) / M_PI * 180.0f;
+				if (VAL(IK_CONSTRAINT_SWITCH)) {
+					theta = abs(theta) > VAL(IK_THETA_COS) ? theta/ abs(theta)*VAL(IK_THETA_COS) : theta;
+				}
+				float theta_radiant = atanf(vIK[2] / vIK[1]);
+				printf("%f\n", theta);
+				glRotatef(theta, 1, 0, 0);
+				MakeHRotX(mRota, -theta_radiant);
+				vIK = mRota * vIK;
+				//glPushMatrix();
+				//glTranslatef(vIK[0], vIK[1], vIK[2]);
+				//drawAxis();
+				//glPopMatrix;
+				std::cout << vIK << std::endl;
+				// deal with the situation that can't reach (too far
+				float dis = sqrt(vIK[0] * vIK[0] + vIK[1] * vIK[1]);
+				if (dis > (l1 + l2)) {
+					printf("distancelong\n");
+					vIK[0] *= (l1 + l2) / dis;
+					vIK[1] *= (l1 + l2) / dis;
+					while (sqrt(vIK[0] * vIK[0] + vIK[1] * vIK[1]) >= l1 + l2) {
+						vIK[0] *= 0.98; vIK[1] *= 0.99;
+					}
+				}
+				else if (dis < (l2 - l1)) {
+					printf("distanceshort\n");
+					vIK[0] *= (l2 - l1) / dis * 1.05;
+					vIK[1] *= (l2 - l1) / dis * 1.05;
+					while (sqrt(vIK[0] * vIK[0] + vIK[1] * vIK[1]) <= l2 - l1) {
+						vIK[0] *= 1.02; vIK[1] *= 1.02;
+					}
+				}
+				std::cout << vIK <<" distance:"<< sqrt(vIK[0] * vIK[0] + vIK[1] * vIK[1]) <<std::endl;
+				// calculate alpha1 and alpha2
+				float x, y; // target point
+				if (vIK[1] < 0) {
+					x = -vIK[1], y = vIK[0];
+					alpha2 = acosf((x*x + y * y - l1 * l1 - l2 * l2) / (2 * l1*l2));
+					//alpha1 = (-l1 * sinf(alpha2)*x + (l1 + l2 * cosf(alpha2))*y) / (l1 * sinf(alpha2)*y + (l1 + l2 * cosf(alpha2))*x);
+					float temp = acosf((x*x + y * y + l1 * l1 - l2 * l2) / (2 * l1*sqrt(x*x + y * y)));
+					alpha1 = atanf(y / x) - temp;
+					alpha2 = alpha2 / M_PI * 180.0f + 30.0f;
+					alpha1 = alpha1 / M_PI * 180.0f;
+				}
+				else if (vIK[0] >= 0) {
+					x = vIK[0], y = vIK[1];
+					alpha2 = acosf((x*x + y * y - l1 * l1 - l2 * l2) / (2 * l1*l2));
+					//alpha1 = (-l1 * sinf(alpha2)*x + (l1 + l2 * cosf(alpha2))*y) / (l1 * sinf(alpha2)*y + (l1 + l2 * cosf(alpha2))*x);
+					float temp = acosf((x*x + y * y + l1 * l1 - l2 * l2) / (2 * l1*sqrt(x*x + y * y)));
+					alpha1 = atanf(y / x) - temp;
+					alpha2 = alpha2 / M_PI * 180.0f + 30.0f;
+					alpha1 = alpha1 / M_PI * 180.0f + 90.0f;
+				}
+				else {
+					x = - vIK[0], y = vIK[1];
+					alpha2 = acosf((x*x + y * y - l1 * l1 - l2 * l2) / (2 * l1*l2));
+					//alpha1 = (-l1 * sinf(alpha2)*x + (l1 + l2 * cosf(alpha2))*y) / (l1 * sinf(alpha2)*y + (l1 + l2 * cosf(alpha2))*x);
+					float temp = acosf((x*x + y * y + l1 * l1 - l2 * l2) / (2 * l1*sqrt(x*x + y * y)));
+					alpha1 = atanf(y / x) - temp;
+					alpha2 = - (alpha2 / M_PI * 180.0f - 30.0f);
+					alpha1 = - (alpha1 / M_PI * 180.0f + 90.0f);
+				}
+
+				if (VAL(IK_CONSTRAINT_SWITCH)) {
+					alpha1 = abs(alpha1) > VAL(IK_ALPHA_COS) ? alpha1 / abs(alpha1) * VAL(IK_ALPHA_COS) : alpha1;
+					alpha2 = abs(alpha2) > VAL(IK_BETA_COS) ? alpha2 / abs(alpha2) * VAL(IK_BETA_COS) : alpha2;
+				}
+
+				printf("%f %f\n", alpha2, alpha1);
+				glRotatef(alpha1, 0, 0, 1);
+			}
+			else { 
+				glRotated(VAL(RIGHT_BACK_THETA), 1, 0, 0);
+				glRotated(VAL(RIGHT_BACK_ANGLE1), 0, 0, 1);
+			}
+			
             animate(RIGHT_BACK_ANGLE1);
 
             glPushMatrix();
@@ -355,7 +450,8 @@ void DoggModel::draw()
 
             glTranslated(0, -2.5 + aux, 0);
             // rotate
-            glRotated(VAL(RIGHT_BACK_ANGLE2), 0, 0, 1);
+			if (VAL(IK_SWITCH)) glRotatef(alpha2, 0, 0, 1);
+            else glRotated(VAL(RIGHT_BACK_ANGLE2), 0, 0, 1);
             animate(RIGHT_BACK_ANGLE2);
 
             if (VAL(LV_DETAIL) > 2) {
@@ -515,6 +611,8 @@ void DoggModel::resetLeg() {
     SET(RIGHT_BACK_ANGLE2, 0);
     SET(RIGHT_BACK_ANGLE3, 0);
 
+	SET(RIGHT_BACK_THETA, 0);
+
     SET(RESET_LEG, 0);
 }
 
@@ -630,7 +728,6 @@ void DoggModel::animate(int index) {
     }
 }
 
-
 int main()
 {
 	// Initialize the controls
@@ -679,6 +776,17 @@ int main()
 
 	controls[LSYSTEM_SWITCH] = ModelerControl("Display Tree", 0, 1, 1, 0);
 	controls[LSYSTEM_STAGE] = ModelerControl("LSystem Stage", 1, 6, 1, 3);
+
+	controls[RIGHT_BACK_THETA] = ModelerControl("Right back upper leg theta", -15, 15, 1, 0);
+
+	controls[IK_SWITCH] = ModelerControl("IK Switch", 0, 1, 1, 0);
+	controls[IK_X] = ModelerControl("IK X", -10, 10, 0.1f, 4.5);
+	controls[IK_Y] = ModelerControl("IK Y", -10, 10, 0.1f, 4.4);
+	controls[IK_Z] = ModelerControl("IK Z", -10, 10, 0.1f, -1);
+	controls[IK_CONSTRAINT_SWITCH] = ModelerControl("IK Constraint Switch", 0, 1, 1, 0);
+	controls[IK_ALPHA_COS] = ModelerControl("IK Alpha Constraint(deg)", 0, 90, 1, 45);
+	controls[IK_BETA_COS] = ModelerControl("IK Alpha2 Constraint(deg)", 0, 90, 1, 45);
+	controls[IK_THETA_COS] = ModelerControl("IK Theta Constraint(deg)", 0, 45, 1, 15);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
 
