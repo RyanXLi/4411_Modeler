@@ -26,7 +26,7 @@ Current Count: 8
 
 - [x] (1)Use a texture map on all or part of your character. (The safest way to do this is to implement your own primitives inside your model file that do texture mapping.)
 
-- [ ] (1)Build a complex shape as a set of polygonal faces, using the "triangle" primitive to render them.
+- [x] (1)Build a complex shape as a set of polygonal faces, using the "triangle" primitive to render them.
 
 - [x] (1)Make an additional "animated" sequence your character can perform.  Although you can try to use a timed callback "add_idle" (see [here](http://www.fltk.org/documentation.php) for more information), an easier solution is just to increment values each time your model's draw() function is called. If you use the menu option to turn on animation, your draw() function will be executed at around 30 times per second.
 
@@ -46,7 +46,7 @@ Current Count: 8
 
 - [x] (2)In addition to mood cycling, have your character react differently to UI controls depending on what mood they are in.  Again, there is some weight in this item because the character reactions are supposed to make sense in a story telling way.  Think about the mood that the character is in, think about the things that you might want the character to do, and then provide a means for expressing and controlling those actions.
 
-- [ ] (4)One difficulty with hierarchical modeling using primitives is the difficulty of building "organic" shapes. It's difficult, for instance, to make a convincing looking human arm because you can't really show the bending of the skin and bulging of the muscle using cylinders and spheres. There has, however, been success in building organic shapes using [metaballs](http://en.wikipedia.org/wiki/Metaballs). Implement your hierarchical model and "skin" it with metaballs. Hint: look up "marching cubes" and "marching tetrahedra" --these are two commonly used algorithms for volume rendering. Here is a [demo application](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/metaballs_demo.zip) by Joe Hall and Eugene Hsu that shows metaballs in action.
+- [x] (4)One difficulty with hierarchical modeling using primitives is the difficulty of building "organic" shapes. It's difficult, for instance, to make a convincing looking human arm because you can't really show the bending of the skin and bulging of the muscle using cylinders and spheres. There has, however, been success in building organic shapes using [metaballs](http://en.wikipedia.org/wiki/Metaballs). Implement your hierarchical model and "skin" it with metaballs. Hint: look up "marching cubes" and "marching tetrahedra" --these are two commonly used algorithms for volume rendering. Here is a [demo application](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/metaballs_demo.zip) by Joe Hall and Eugene Hsu that shows metaballs in action.
 
 - [ ] (8)You might notice after building your model that it's difficult to have very "goal-oriented" motion. Given a model of a human, for instance, if the goal is to move the hand to a certain coordinate, we might have to change the shoulder angle, elbow angle -- maybe even the angle of the knees if the feet are constrained to one position. Implement a method, given a set of position constraints like
 

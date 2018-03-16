@@ -20,6 +20,7 @@ public:
     void init();
 	std::vector<char> gsentence(const int stage);
 	void drawLsystem(const std::vector<char> & sentence);
+    void drawWing(bool isRightWing);
     void drawAxis();
     void resetLeg();
 	void frameAll(float dx, float dy, float dz);
@@ -168,6 +169,17 @@ void DoggModel::draw()
                 glRotated(90, 0, 1, 0);
                 drawCylinder(3, 0.8, 0.8);
                 glPopMatrix();
+
+                // wing
+                glPushMatrix();
+                glTranslated(0.3, 0, 0);
+                glRotated(-90, 0, 1, 0);
+                glRotated(-90, 0, 0, 1);
+                glRotated(180, 1, 0, 0);
+                //drawAxis();
+                drawWing(FALSE);
+                glPopMatrix();
+
                 glPopMatrix();
 
                 // right
@@ -185,9 +197,17 @@ void DoggModel::draw()
                 glRotated(90, 0, 1, 0);
                 drawCylinder(3, 0.8, 0.8);
                 glPopMatrix();
+
+                // wing
+                glPushMatrix();
+                glTranslated(0.3, 0, 0);
+                glRotated(90, 0, 1, 0);
+                glRotated(90, 0, 0, 1);
+                drawWing(TRUE);
                 glPopMatrix();
 
-            
+                glPopMatrix();
+
 
             }
 
@@ -581,6 +601,45 @@ void DoggModel::moveTail() {
         tailIncr = -tailIncr;
     }
     SET(TAIL_ANGLE_Y, VAL(TAIL_ANGLE_Y) + tailIncr);
+}
+
+void DoggModel::drawWing(bool isRightWing) {
+    double sign = isRightWing ? 1 : -1;
+    double incr = -0.1;
+    double y = 0;
+    glBegin(GL_TRIANGLE_STRIP);
+
+    glVertex3d(0, y, 0);
+    glVertex3d(0, y, 1);
+    glVertex3d(1 * sign, y, 0.1);
+    y += incr;
+
+    glVertex3d(1 * sign, y, 1.2);
+    glVertex3d(2 * sign, y, 0.2);
+    glVertex3d(2 * sign, y, 1.5);
+    y += incr;
+
+    glVertex3d(3 * sign, y, 0.5);
+    glVertex3d(3 * sign, y, 2);
+    glVertex3d(4 * sign, y, 0.7);
+    y += incr;
+
+    glVertex3d(4 * sign, y, 2.3);
+    glVertex3d(5 * sign, y, 0.9);
+    glVertex3d(5 * sign, y, 3);
+    y += incr;
+
+    glVertex3d(6 * sign, y, 1);
+    glVertex3d(6 * sign, y, 3.5);
+    glVertex3d(7 * sign, y, 1.2);
+    y += incr;
+
+    glVertex3d(7 * sign, y, 2.7);
+    glVertex3d(8 * sign, y, 1.8);
+    glVertex3d(8.7 * sign, y, 2.1);
+    y += incr;
+
+    glEnd();
 }
 
 void DoggModel::drawAxis() {
