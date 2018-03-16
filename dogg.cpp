@@ -28,6 +28,7 @@ public:
     void moveHead();
     void moveTail();
     bool checkLegParam();
+    void animateWing();
 
 
     unsigned char * texImg;
@@ -44,6 +45,7 @@ public:
     int headIncr = 1;
     int tailIncr = 1;
     bool hasDiffLegParam = 0;
+    double wingIncr = 1;
 
     double anim_incr [12] = {
         5, 5, 5,
@@ -186,6 +188,10 @@ void DoggModel::draw()
                 glRotated(-90, 0, 1, 0);
                 glRotated(-90, 0, 0, 1);
                 glRotated(180, 1, 0, 0);
+
+                //rotate
+                glRotated(- VAL(WING_ANGLE), 0, 0, 1);
+                animateWing();
                 //drawAxis();
                 drawWing(FALSE);
                 glPopMatrix();
@@ -213,6 +219,11 @@ void DoggModel::draw()
                 glTranslated(0.3, 0, 0);
                 glRotated(90, 0, 1, 0);
                 glRotated(90, 0, 0, 1);
+
+                //rotate
+                glRotated(VAL(WING_ANGLE), 0, 0, 1);
+                animateWing();
+                //drawAxis();
                 drawWing(TRUE);
                 glPopMatrix();
 
@@ -1006,6 +1017,18 @@ void DoggModel::animate(int index) {
 }
 
 
+void DoggModel::animateWing() {
+
+    if (ModelerApplication::Instance()->m_animating) {
+
+        if (VAL(WING_ANGLE) >= 45 || VAL(WING_ANGLE) <= -45) {
+            wingIncr = -wingIncr;
+        }
+        SET(WING_ANGLE, VAL(WING_ANGLE) + wingIncr);
+    }
+}
+
+
 int main()
 {
 	// Initialize the controls
@@ -1070,6 +1093,8 @@ int main()
 	controls[IK_ALPHA_COS] = ModelerControl("IK Alpha Constraint(deg)", 0, 90, 1, 45);
 	controls[IK_BETA_COS] = ModelerControl("IK Alpha2 Constraint(deg)", 0, 90, 1, 45);
 	controls[IK_THETA_COS] = ModelerControl("IK Theta Constraint(deg)", 0, 45, 1, 15);
+
+    controls[WING_ANGLE] = ModelerControl("Wing Angle", -30, 30, 0.1f, 0);
 
     ModelerApplication::Instance()->Init(&createDoggModel, controls, NUMCONTROLS);
 
