@@ -138,7 +138,56 @@ void DoggModel::draw()
             glTranslated(0, 1.5, -1);
             glRotated(-90, 0.0, 0.0, 1.0);
             glScaled(1.5, 4.5, 2);
-            drawTriangularPrism(1,1,1);
+            //drawTriangularPrism(1,1,1);
+
+            // top bottom
+            drawTriangle(
+                0, 1, 0,
+                1, 0, 0,
+                0, 0, 0
+            );
+            drawTriangle(
+                0, 0, 1,
+                1, 0, 1,
+                0, 1, 1
+            );
+
+            // x-z plane
+            drawTriangle(
+                0, 0, 0,
+                0, 0, 1,
+                1, 0, 1
+            );
+            drawTriangle(
+                1, 0, 1,
+                1, 0, 0,
+                0, 0, 0
+            );
+
+            // z-y plane
+            drawTriangle(
+                0, 0, 0,
+                0, 1, 0,
+                0, 1, 1
+            );
+            drawTriangle(
+                0, 1, 1,
+                0, 0, 1,
+                0, 0, 0
+            );
+
+            // final surface
+            drawTriangle(
+                0, 1, 0,
+                0, 1, 1,
+                1, 0, 1
+            );
+            drawTriangle(
+                1, 0, 1,
+                1, 0, 0,
+                0, 1, 0
+            );
+
         glPopMatrix();
 
         glPushMatrix();
